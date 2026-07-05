@@ -79,23 +79,23 @@ Open http://localhost:3000
 Chart path:
 
 ```bash
-helm/aqi-microservices
+helm-aqi
 ```
 
 Install using the deployment and environment values files:
 
 ```bash
-helm install aqi-app ./helm/aqi-microservices \
-  -f ./helm/aqi-microservices/values-deployment.yaml \
-  -f ./helm/aqi-microservices/values-env.yaml
+helm install aqi-app ./helm-aqi \
+  -f ./helm-aqi/values-deployment.yaml \
+  -f ./helm-aqi/values-env.yaml
 ```
 
 Upgrade release after changes:
 
 ```bash
-helm upgrade aqi-app ./helm/aqi-microservices \
-  -f ./helm/aqi-microservices/values-deployment.yaml \
-  -f ./helm/aqi-microservices/values-env.yaml
+helm upgrade aqi-app ./helm-aqi \
+  -f ./helm-aqi/values-deployment.yaml \
+  -f ./helm-aqi/values-env.yaml
 ```
 
 Uninstall release:
