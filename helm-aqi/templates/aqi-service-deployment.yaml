@@ -16,10 +16,22 @@ spec:
         app: {{ include "aqi-microservices.fullname" . }}-aqi-service
         {{- include "aqi-microservices.labels" . | nindent 8 }}
     spec:
+      {{- if .Values.services.aqiService.podSecurityContext }}
+      securityContext:
+        {{- toYaml .Values.services.aqiService.podSecurityContext | nindent 8 }}
+      {{- end }}
+      {{- if .Values.services.aqiService.affinity }}
+      affinity:
+        {{- toYaml .Values.services.aqiService.affinity | nindent 8 }}
+      {{- end }}
       containers:
         - name: aqi-service
           image: "{{ .Values.services.aqiService.image.repository }}:{{ .Values.services.aqiService.image.tag }}"
           imagePullPolicy: {{ .Values.services.aqiService.image.pullPolicy }}
+          {{- if .Values.services.aqiService.securityContext }}
+          securityContext:
+            {{- toYaml .Values.services.aqiService.securityContext | nindent 12 }}
+          {{- end }}
           ports:
             - containerPort: {{ .Values.services.aqiService.containerPort }}
           {{- if .Values.services.aqiService.env }}
