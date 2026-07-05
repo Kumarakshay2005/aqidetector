@@ -16,10 +16,22 @@ spec:
         app: {{ include "aqi-microservices.fullname" . }}-api-gateway
         {{- include "aqi-microservices.labels" . | nindent 8 }}
     spec:
+      {{- if .Values.services.apiGateway.podSecurityContext }}
+      securityContext:
+        {{- toYaml .Values.services.apiGateway.podSecurityContext | nindent 8 }}
+      {{- end }}
+      {{- if .Values.services.apiGateway.affinity }}
+      affinity:
+        {{- toYaml .Values.services.apiGateway.affinity | nindent 8 }}
+      {{- end }}
       containers:
         - name: api-gateway
           image: "{{ .Values.services.apiGateway.image.repository }}:{{ .Values.services.apiGateway.image.tag }}"
           imagePullPolicy: {{ .Values.services.apiGateway.image.pullPolicy }}
+          {{- if .Values.services.apiGateway.securityContext }}
+          securityContext:
+            {{- toYaml .Values.services.apiGateway.securityContext | nindent 12 }}
+          {{- end }}
           ports:
             - containerPort: {{ .Values.services.apiGateway.containerPort }}
           {{- if .Values.services.apiGateway.env }}

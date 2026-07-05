@@ -1,0 +1,34 @@
+{{- if and .Values.services.frontend.enabled .Values.services.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "aqi-microservices.fullname" . }}-frontend
+  labels:
+    {{- include "aqi-microservices.labels" . | nindent 4 }}
+  {{- with .Values.services.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.services.ingress.className }}
+  ingressClassName: {{ .Values.services.ingress.className }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.services.ingress.host | quote }}
+      http:
+        paths:
+          - path: {{ .Values.services.ingress.path }}
+            pathType: {{ .Values.services.ingress.pathType }}
+            backend:
+              service:
+                name: {{ include "aqi-microservices.fullname" . }}-frontend
+                port:
+                  number: {{ .Values.services.frontend.service.port }}
+  {{- if .Values.services.ingress.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.services.ingress.host | quote }}
+      secretName: {{ .Values.services.ingress.tls.secretName | quote }}
+  {{- end }}
+---
+{{- end }}

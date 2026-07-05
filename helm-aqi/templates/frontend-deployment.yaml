@@ -16,10 +16,22 @@ spec:
         app: {{ include "aqi-microservices.fullname" . }}-frontend
         {{- include "aqi-microservices.labels" . | nindent 8 }}
     spec:
+      {{- if .Values.services.frontend.podSecurityContext }}
+      securityContext:
+        {{- toYaml .Values.services.frontend.podSecurityContext | nindent 8 }}
+      {{- end }}
+      {{- if .Values.services.frontend.affinity }}
+      affinity:
+        {{- toYaml .Values.services.frontend.affinity | nindent 8 }}
+      {{- end }}
       containers:
         - name: frontend
           image: "{{ .Values.services.frontend.image.repository }}:{{ .Values.services.frontend.image.tag }}"
           imagePullPolicy: {{ .Values.services.frontend.image.pullPolicy }}
+          {{- if .Values.services.frontend.securityContext }}
+          securityContext:
+            {{- toYaml .Values.services.frontend.securityContext | nindent 12 }}
+          {{- end }}
           ports:
             - containerPort: {{ .Values.services.frontend.containerPort }}
           {{- if .Values.services.frontend.env }}
