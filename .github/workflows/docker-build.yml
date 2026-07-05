@@ -1,0 +1,38 @@
+name: Build Docker Images
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service: frontend
+            context: ./frontend
+            image: aqidetector-frontend
+          - service: api-gateway
+            context: ./services/api-gateway
+            image: aqidetector-api-gateway
+          - service: api-service
+            context: ./services/aqi-service
+            image: aqidetector-api-service
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build ${{ matrix.service }} image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.context }}/Dockerfile
+          push: false
+          tags: ${{ github.repository_owner }}/${{ matrix.image }}:${{ github.sha }}

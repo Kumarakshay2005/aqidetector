@@ -1,0 +1,35 @@
+{{- if .Values.services.aqiService.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "aqi-microservices.fullname" . }}-aqi-service
+  labels:
+    {{- include "aqi-microservices.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.services.aqiService.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "aqi-microservices.fullname" . }}-aqi-service
+  template:
+    metadata:
+      labels:
+        app: {{ include "aqi-microservices.fullname" . }}-aqi-service
+        {{- include "aqi-microservices.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: aqi-service
+          image: "{{ .Values.services.aqiService.image.repository }}:{{ .Values.services.aqiService.image.tag }}"
+          imagePullPolicy: {{ .Values.services.aqiService.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.services.aqiService.containerPort }}
+          {{- if .Values.services.aqiService.env }}
+          env:
+            {{- range $k, $v := .Values.services.aqiService.env }}
+            - name: {{ $k }}
+              value: {{ $v | quote }}
+            {{- end }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.services.aqiService.resources | nindent 12 }}
+---
+{{- end }}

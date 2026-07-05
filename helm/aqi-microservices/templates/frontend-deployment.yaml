@@ -1,0 +1,35 @@
+{{- if .Values.services.frontend.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "aqi-microservices.fullname" . }}-frontend
+  labels:
+    {{- include "aqi-microservices.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.services.frontend.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "aqi-microservices.fullname" . }}-frontend
+  template:
+    metadata:
+      labels:
+        app: {{ include "aqi-microservices.fullname" . }}-frontend
+        {{- include "aqi-microservices.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: frontend
+          image: "{{ .Values.services.frontend.image.repository }}:{{ .Values.services.frontend.image.tag }}"
+          imagePullPolicy: {{ .Values.services.frontend.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.services.frontend.containerPort }}
+          {{- if .Values.services.frontend.env }}
+          env:
+            {{- range $k, $v := .Values.services.frontend.env }}
+            - name: {{ $k }}
+              value: {{ $v | quote }}
+            {{- end }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.services.frontend.resources | nindent 12 }}
+---
+{{- end }}

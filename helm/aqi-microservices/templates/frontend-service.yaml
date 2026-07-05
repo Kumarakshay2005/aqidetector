@@ -1,0 +1,17 @@
+{{- if .Values.services.frontend.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "aqi-microservices.fullname" . }}-frontend
+  labels:
+    {{- include "aqi-microservices.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.services.frontend.service.type }}
+  selector:
+    app: {{ include "aqi-microservices.fullname" . }}-frontend
+  ports:
+    - protocol: TCP
+      port: {{ .Values.services.frontend.service.port }}
+      targetPort: {{ .Values.services.frontend.service.targetPort }}
+---
+{{- end }}

@@ -1,0 +1,17 @@
+{{- if .Values.services.apiGateway.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "aqi-microservices.fullname" . }}-api-gateway
+  labels:
+    {{- include "aqi-microservices.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.services.apiGateway.service.type }}
+  selector:
+    app: {{ include "aqi-microservices.fullname" . }}-api-gateway
+  ports:
+    - protocol: TCP
+      port: {{ .Values.services.apiGateway.service.port }}
+      targetPort: {{ .Values.services.apiGateway.service.targetPort }}
+---
+{{- end }}

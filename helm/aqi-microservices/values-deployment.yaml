@@ -1,0 +1,42 @@
+services:
+  frontend:
+    enabled: true
+    replicaCount: 2
+    image:
+      repository: akshaysharma15791/aqidetector-frontend
+      tag: v1.0.0
+      pullPolicy: IfNotPresent
+    service:
+      type: ClusterIP
+      port: 3000
+      targetPort: 3000
+    containerPort: 3000
+    resources: {}
+
+  apiGateway:
+    enabled: true
+    replicaCount: 2
+    image:
+      repository: akshaysharma15791/aqidetector-api-gateway
+      tag: v1.0.0
+      pullPolicy: IfNotPresent
+    service:
+      type: ClusterIP
+      port: 4000
+      targetPort: 4000
+    containerPort: 4000
+    resources: {}
+
+  aqiService:
+    enabled: true
+    replicaCount: 2
+    image:
+      repository: akshaysharma15791/aqidetector-api-service
+      tag: v1.0.0
+      pullPolicy: IfNotPresent
+    service:
+      type: ClusterIP
+      port: 5000
+      targetPort: 5000
+    containerPort: 5000
+    resources: {}

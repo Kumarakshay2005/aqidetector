@@ -1,0 +1,35 @@
+{{- if .Values.services.apiGateway.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "aqi-microservices.fullname" . }}-api-gateway
+  labels:
+    {{- include "aqi-microservices.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.services.apiGateway.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "aqi-microservices.fullname" . }}-api-gateway
+  template:
+    metadata:
+      labels:
+        app: {{ include "aqi-microservices.fullname" . }}-api-gateway
+        {{- include "aqi-microservices.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: api-gateway
+          image: "{{ .Values.services.apiGateway.image.repository }}:{{ .Values.services.apiGateway.image.tag }}"
+          imagePullPolicy: {{ .Values.services.apiGateway.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.services.apiGateway.containerPort }}
+          {{- if .Values.services.apiGateway.env }}
+          env:
+            {{- range $k, $v := .Values.services.apiGateway.env }}
+            - name: {{ $k }}
+              value: {{ $v | quote }}
+            {{- end }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.services.apiGateway.resources | nindent 12 }}
+---
+{{- end }}

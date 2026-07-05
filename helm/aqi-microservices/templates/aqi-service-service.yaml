@@ -1,0 +1,17 @@
+{{- if .Values.services.aqiService.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "aqi-microservices.fullname" . }}-aqi-service
+  labels:
+    {{- include "aqi-microservices.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.services.aqiService.service.type }}
+  selector:
+    app: {{ include "aqi-microservices.fullname" . }}-aqi-service
+  ports:
+    - protocol: TCP
+      port: {{ .Values.services.aqiService.service.port }}
+      targetPort: {{ .Values.services.aqiService.service.targetPort }}
+---
+{{- end }}

@@ -1,0 +1,25 @@
+services:
+  frontend:
+    env:
+      API_BASE_URL: "http://aqi-app-aqi-microservices-api-gateway:4000"
+
+  apiGateway:
+    env:
+      AQI_SERVICE_URL: "http://aqi-app-aqi-microservices-aqi-service:5000"
+      DB_HOST: ""
+      DB_PORT: "5432"
+      DB_NAME: ""
+      DB_USER: ""
+      DB_PASSWORD: ""
+      DB_SSL: "false"
+      DATABASE_URL: ""
+
+  aqiService:
+    env:
+      DB_HOST: ""
+      DB_PORT: "5432"
+      DB_NAME: ""
+      DB_USER: ""
+      DB_PASSWORD: ""
+      DB_SSL: "false"
+      DATABASE_URL: ""
